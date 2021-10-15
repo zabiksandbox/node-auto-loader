@@ -126,3 +126,5 @@ The [current changelog is here](./changelogs/v1.md). All [other changelogs are h
 ## Contributions
 
 NAL is an open source community supported project, if you would like to help please consider <a href="https://github.com/caboodle-tech/node-auto-loader/issues" target="_blank">tackling an issue</a> or <a href="https://ko-fi.com/caboodletech" target="_blank">making a donation</a> to keep the project alive.
+
+**Reminder:** Before submitting new pull requests make sure to run `npm test`. If you add a new feature make sure it is covered by a new or existing test.
