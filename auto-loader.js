@@ -1,6 +1,7 @@
 const FS = require('fs');
 const Path = require('path');
 
+// Fallback: Should always be CJS unless the user altered this file.
 let INTERNAL_TYPE = 'CJS';
 try {
     let CommonJSCheck = require.main;
@@ -21,10 +22,10 @@ const AutoLoader = (function (path) {
     const ALLOW = ['.js', '.cjs', '.mjs'];
 
     /**
-     * Converts an absolute file path into a file:// path which is all OS safe.
+     * Converts an absolute file path into an OS safe file:// path.
      *
      * @param {String} absPath
-     * @return {String} The path converted to a file:// path.
+     * @return {String} The path converted to a file:// path for Windows.
      */
     const convertToFileURL = function (absPath) {
         let pathName = Path.resolve(absPath).replace(/\\/g, '/');
@@ -36,10 +37,22 @@ const AutoLoader = (function (path) {
         return pathName;
     };
 
+    /**
+     * Get the array of allowed file types. Only files that end with these
+     * extensions will be auto loaded.
+     *
+     * @return {Array} An array of allowed file extensions.
+     */
     const getAllowed = function () {
         return JSON.parse(JSON.stringify(ALLOW));
     };
 
+    /**
+     * Quick and dirty way to detect if this package is being used in a
+     * CommonJS (CJS) or ES6 (MJS) environment.
+     *
+     *  @return {String|null} The environment abbreviation or null if not found.
+     */
     const getCallerType = function () {
         let s;
         const error = new Error();
@@ -57,6 +70,13 @@ const AutoLoader = (function (path) {
         return null;
     };
 
+    /**
+     * The options argument for loadModules is optional. This function insures
+     * that all options are present or set to their defaults.
+     *
+     * @param {Object|undefined} options The user supplied options object or undefined.
+     * @return {Object} A complete options object for loadModules.
+     */
     const getCorrectOptions = function (options) {
         if (!options || typeof options !== 'object') {
             options = {
@@ -93,12 +113,20 @@ const AutoLoader = (function (path) {
     /**
      * Getter to retrieve the currently configured directory to auto load.
      *
-     * @return {*}
+     * @return {String} The currently configured directory to auto load.
      */
     const getDirectory = function () {
         return DIR;
     };
 
+    /**
+     * Build an array of all modules requested to be auto loaded.
+     *
+     * @param {String} dir The directory to auto load.
+     * @param {Array} modules An array of absolute paths to the modules to load.
+     * @param {Object} options The options being used by loadModules.
+     * @return {Array} An array of absolute paths to the modules to auto loaded.
+     */
     const getModulePaths = function (dir, modules, options) {
         if (!Array.isArray(modules)) {
             options = modules;
@@ -119,6 +147,11 @@ const AutoLoader = (function (path) {
         return modules;
     };
 
+    /**
+     * Get the type mode being used: CommonJS (CJS) or ES6 (MJS).
+     *
+     * @return {*}
+     */
     const getType = function () {
         if (!TYPE) {
             setType();
@@ -130,10 +163,11 @@ const AutoLoader = (function (path) {
      * Auto load every JavaScript file located in the configured DIR and pass it back to a callback.
      *
      * @param {Function} callback A callback function to pass the loaded module to.
-     * @param {Function} checkFirst If provided we will check if you want to load the module by
-     *                                 passing the modules filename to this callback function first.
-     *                                 Your function must return true or false.
-     * @return {null} Returns nothing, used to short circuit the function.
+     * @param {Object} options An optional object used to alter the way loadModules works:
+     *  allowJSON: true if JSON files should be loaded too
+     *  checkFirst: a function to path the modules abs path to, return true to load or false to skip
+     *  recursive: true if all directories under DIR should be loaded too
+     * @return {Promise} Returns a promise that will resolve with a results object.
      */
     const loadModules = async function (callback, options) {
 
@@ -196,6 +230,12 @@ const AutoLoader = (function (path) {
         return results;
     };
 
+    /**
+     * Set the type of module mode being used: CommonJS (CJS) or ES6 (MJS).
+     *
+     * @param {String} type CommonJS (CJS) or ES6 (MJS).
+     * @return {null} Returns nothing, used as a short circuit.
+     */
     const setType = function (type) {
         // If a type was passed in attempt to use it.
         if (type) {
@@ -218,19 +258,8 @@ const AutoLoader = (function (path) {
      * @param {String} path The path to the directory to attempt to auto load.
      */
     const setDirectory = function (pathToDir) {
-        // DIR = pathToDir || __dirname;
         pathToDir = pathToDir || __dirname;
         if (pathToDir[0] === '.') {
-            // if (module && module.parent) {
-            //     DIR = Path.join(module.parent.path, path);
-            // } else if (process.argv) {
-            //     for (let i = 0; i < process.argv.length; i++) {
-            //         if (process.argv[i].indexOf(__dirname) > -1) {
-            //             DIR = Path.join(Path.dirname(process.argv[i]), path);
-            //             break;
-            //         }
-            //     }
-            // }
             if (module && module.parent) {
                 pathToDir = Path.join(module.parent.path, pathToDir);
             } else {
@@ -243,6 +272,7 @@ const AutoLoader = (function (path) {
     // Initialize the class when instantiated.
     setDirectory(path);
 
+    // Public methods.
     return {
         getAllowed,
         getDirectory,
