@@ -25,7 +25,7 @@ describe('JSON files should:', () => {
             }
         }
         await autoLoader.loadModules(loadCallback, options);
-        expect(pass).to.eql(false); // FORCE TEST FAIL
+        expect(pass).to.eql(true);
     });
 
     it('not auto load when the `allowJSON` option is `false`.', async () => {
