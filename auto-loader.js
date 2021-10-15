@@ -61,17 +61,13 @@ const AutoLoader = (function (path) {
         if (!options || typeof options !== 'object') {
             options = {
                 allowJSON: false,
-                checkFirst: null
+                checkFirst: null,
+                recursive: false
             };
         }
 
         if (!options.allowJSON) {
             options.allowJSON = false;
-        }
-
-        if (!options.checkFirst || typeof options.checkFirst !== 'function') {
-            // Use an always passing checkFirst function.
-            options.checkFirst = (ignored) => true;
         }
 
         if (options.allowJSON) {
@@ -80,6 +76,15 @@ const AutoLoader = (function (path) {
             }
         } else if (ALLOW.includes('.json')) {
             ALLOW.splice(ALLOW.indexOf('.json'), 1);
+        }
+
+        if (!options.checkFirst || typeof options.checkFirst !== 'function') {
+            // Use an always passing checkFirst function.
+            options.checkFirst = (ignored) => true;
+        }
+
+        if (!options.recursive) {
+            options.recursive = false;
         }
 
         return options;
@@ -92,6 +97,26 @@ const AutoLoader = (function (path) {
      */
     const getDirectory = function () {
         return DIR;
+    };
+
+    const getModulePaths = function (dir, modules, options) {
+        if (!Array.isArray(modules)) {
+            options = modules;
+            modules = [];
+        }
+
+        const items = FS.readdirSync(dir);
+
+        for (let i = 0; i < items.length; i++) {
+            const pathToItem = Path.normalize(Path.join(dir, items[i]));
+            if (ALLOW.includes(Path.extname(pathToItem))) {
+                modules.push(pathToItem);
+            } else if (FS.lstatSync(pathToItem).isDirectory() && options.recursive) {
+                getModulePaths(pathToItem, modules, options);
+            }
+        }
+
+        return modules;
     };
 
     const getType = function () {
@@ -132,13 +157,8 @@ const AutoLoader = (function (path) {
             loaded: [],
             loadedCount: 0
         };
-        const modules = [];
 
-        FS.readdirSync(DIR).forEach((file) => {
-            if (ALLOW.includes(Path.extname(file))) {
-                modules.push(Path.normalize(Path.join(DIR, file)));
-            }
-        });
+        const modules = getModulePaths(DIR, options);
 
         for (let i = 0; i < modules.length; i++) {
             const load = modules[i];
