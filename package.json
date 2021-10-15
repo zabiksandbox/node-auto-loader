@@ -1,20 +1,30 @@
 {
-  "name": "node-auto-loader",
-  "version": "0.1.0",
-  "description": "des",
+  "name": "@caboodle-tech/node-auto-loader",
+  "version": "1.0.0",
+  "description": "Node Auto Loader provides a simple way to automatically load a directory of CommonJS (CJS) modules, ES6 (MJS) modules, and JSON files automatically.",
   "main": "auto-loader.js",
   "scripts": {
     "test": "npx mocha ./test/run-all-tests.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/caboodle-tech/node-autoloader.git"
+    "url": "git+https://github.com/caboodle-tech/node-auto-loader.git"
   },
   "keywords": [
-    "key",
-    "word"
+    "Node",
+    "Auto",
+    "Loader",
+    "Load",
+    "Require",
+    "Import",
+    "CommonJS",
+    "ES6",
+    "Module"
   ],
   "author": "Christopher Keers <source[at]caboodle.tech>",
+  "contributors": [
+    "Caboodle Tech Inc (https://github.com/caboodle-tech)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/caboodle-tech/node-autoloader/issues"
