@@ -1,0 +1,25 @@
+# Display name of workflow:
+name: Run Tests
+
+# When the workflow will run:
+on: pull_request
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel:
+jobs:
+  # Workflow for a single job that runs all tests:
+  test:
+    # The type of runner that the job will run on.
+    runs-on: ubuntu-latest
+
+    # A sequence of tasks that will be executed as part of this job:
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE so this job has access it.
+      # Install node and npm on the server using: https://github.com/actions/setup-node
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+      # Install project dependencies and then run the tests.
+      - run: npm install
+      - run: npm test
