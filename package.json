@@ -1,6 +1,6 @@
 {
   "name": "@caboodle-tech/node-auto-loader",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Node Auto Loader provides a simple way to automatically load a directory of CommonJS (CJS) modules, ES6 (MJS) modules, and JSON files automatically.",
   "main": "auto-loader.js",
   "scripts": {

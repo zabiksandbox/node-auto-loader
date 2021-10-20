@@ -1,4 +1,4 @@
-# Node Auto Loader
+# Node Auto Loader (NAL)
 Node Auto Loader (NAL) is a dependency free single file module auto loader. NAL is capable of automatically auto loading CommonJS (CJS) modules, ES6 (MJS) modules, and JSON files. You should consider using NAL if:
 
 :heavy_check_mark:&nbsp; You have a lot of modules to require/import at once.
@@ -8,6 +8,13 @@ Node Auto Loader (NAL) is a dependency free single file module auto loader. NAL 
 :heavy_check_mark:&nbsp; You want to automate a process; auto loading many Express routes or MongoDB schemas for example.
 
 ## Installation
+
+### Automatically
+NAL can be installed with `npm` and will run in either CommonJS (CJS) or ES6 (MJS) projects. Add NAL as a dependency for your project with:
+
+```javascript
+npm install @caboodle-tech/node-auto-loader
+```
 
 ### Manually
 NAL can be manually incorporated into your CommonJS projects by adding the `auto-loader.js` file into your project, and then requiring it where needed:
@@ -23,13 +30,6 @@ import AutoLoader from './auto-loader.js';
 ```
 
 **NOTE:** Manual installs are not recommended, use the automatic install instead to automatically receive updates.
-
-### Automatically
-NAL can be installed with `npm` and will run in either CommonJS (CJS) or ES6 (MJS) projects. Add NAL as a dependency for your project with:
-
-```javascript
-npm install @caboodle-tech/node-auto-loader
-```
 
 ## Usage
 NAL can be instantiated and run with various options. Here is a simple example of NAL being used to auto load modules from a fictional `modules` directory:
@@ -52,7 +52,7 @@ function callback(module) { ... }
 
 /*
  * Optional callback function that must return a true or false. This allows you
- * to decide is a module should be auto loaded (true) or skipped (false).
+ * to decide if a module should be auto loaded (true) or skipped (false).
  */
 function checkModuleFirst(pathToModule) { ... }
 
@@ -60,7 +60,7 @@ function checkModuleFirst(pathToModule) { ... }
 const options = {
     allowJSON: true,
     checkFirst: checkModuleFirst,
-    recursive: true
+    recursive: false
 }
 
 /**
@@ -114,10 +114,10 @@ The `loadModules` method accepts an optional `options` object. You can uses this
 - Set to a `function` that will be called before autoLoader attempts to load a module.
 - Will receive a single argument `filePath` allowing you to determine if the module should be loaded (`true`) or not (`false`); must return a `true` or `false` value!
 
-#### **recursive** &nbsp;&nbsp;&nbsp;default: false
+#### **recursive** &nbsp;&nbsp;&nbsp;default: true
 
-- Set to `true` if you would like the autoLoader to recursively load modules.
-- When `true` this will make `loadModules` recursively search all directories under the configured directory for modules. By default autoLoader will only load the requested directory ignoring all child directories.
+- Set to `false` if you do not want the autoLoader to recursively load modules.
+- When `false` this will stop `loadModules` from recursively searching all directories under the configured directory for modules.
 
 ## Changelog
 

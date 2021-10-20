@@ -82,7 +82,7 @@ const AutoLoader = (function (path) {
             options = {
                 allowJSON: false,
                 checkFirst: null,
-                recursive: false
+                recursive: true
             };
         }
 
@@ -103,8 +103,8 @@ const AutoLoader = (function (path) {
             options.checkFirst = (ignored) => true;
         }
 
-        if (!options.recursive) {
-            options.recursive = false;
+        if (options.recursive === undefined || typeof options.recursive !== 'boolean') {
+            options.recursive = true;
         }
 
         return options;
