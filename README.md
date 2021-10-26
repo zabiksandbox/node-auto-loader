@@ -13,7 +13,7 @@ Node Auto Loader (NAL) is a dependency free single file module auto loader. NAL 
 NAL can be installed with `npm` and will run in either CommonJS (CJS) or ES6 (MJS) projects. Add NAL as a dependency for your project with:
 
 ```javascript
-npm install @caboodle-tech/node-auto-loader
+npm install node-auto-loader
 ```
 
 ### Manually
@@ -36,9 +36,9 @@ NAL can be instantiated and run with various options. Here is a simple example o
 
 ```javascript
 // CommonJS require:
-const AutoLoader = require('@caboodle-tech/node-auto-loader');
+const AutoLoader = require('node-auto-loader');
 // OR ES6 import:
-import AutoLoader from ('@caboodle-tech/node-auto-loader');
+import AutoLoader from ('node-auto-loader');
 
 // Get a new instance of AutoLoader and set it to load the modules directory.
 const autoLoader = new AutoLoader('./modules');
