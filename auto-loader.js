@@ -150,7 +150,7 @@ const AutoLoader = (function (path) {
     /**
      * Get the type mode being used: CommonJS (CJS) or ES6 (MJS).
      *
-     * @return {*}
+     * @return {String} The type mode being used.
      */
     const getType = function () {
         if (!TYPE) {
