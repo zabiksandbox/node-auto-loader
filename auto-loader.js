@@ -30,10 +30,12 @@ const AutoLoader = (function (path) {
     const convertToFileURL = function (absPath) {
         let pathName = Path.resolve(absPath).replace(/\\/g, '/');
         // Windows drive letter must be prefixed with a slash.
-
         if (process.platform.includes('win')) {
-            return encodeURI(`${pathName}`).replace(':///', '://');
+            //In server-mode we dont need file://
+            pathName = isNode ? pathName : `file://${pathName}`
+            return encodeURI(pathName).replace(':///', '://');
         } else if (pathName[0] !== '/') { pathName = `/${pathName}`; }
+
         return pathName;
     };
 
@@ -268,6 +270,22 @@ const AutoLoader = (function (path) {
         }
         DIR = Path.resolve(pathToDir);
     };
+
+    /**
+     * Setter to change the configured DIR to auto load.
+     *
+     * @return {Boolean} Returns true or false.
+     */
+    const isNode = function () {
+        var isNode = false;
+        if (typeof process === 'object') {
+            if (typeof process.versions === 'object') {
+                if (typeof process.versions.node !== 'undefined') {
+                isNode = true;
+                }
+            }
+        }
+    }
 
     // Initialize the class when instantiated.
     setDirectory(path);
