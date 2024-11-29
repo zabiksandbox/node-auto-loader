@@ -30,10 +30,10 @@ const AutoLoader = (function (path) {
     const convertToFileURL = function (absPath) {
         let pathName = Path.resolve(absPath).replace(/\\/g, '/');
         // Windows drive letter must be prefixed with a slash.
-        if (pathName[0] !== '/') { pathName = `/${pathName}`; }
+
         if (process.platform.includes('win')) {
-            return encodeURI(`file://${pathName}`).replace(':///', '://');
-        }
+            return encodeURI(`${pathName}`).replace(':///', '://');
+        } else if (pathName[0] !== '/') { pathName = `/${pathName}`; }
         return pathName;
     };
 
