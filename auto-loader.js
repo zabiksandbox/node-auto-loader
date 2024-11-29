@@ -272,19 +272,21 @@ const AutoLoader = (function (path) {
     };
 
     /**
-     * Setter to change the configured DIR to auto load.
+     * is Node process?
      *
      * @return {Boolean} Returns true or false.
      */
     const isNode = function () {
-        var isNode = false;
-        if (typeof process === 'object') {
-            if (typeof process.versions === 'object') {
-                if (typeof process.versions.node !== 'undefined') {
-                isNode = true;
-                }
-            }
-        }
+        try { return this === global } catch (e) { return false; }
+    }
+
+    /**
+     * is Browser process?
+     *
+     * @return {Boolean} Returns true or false.
+     */
+    const isBrowser = function () {
+        try { return this === window; } catch (e) { return false; }
     }
 
     // Initialize the class when instantiated.
